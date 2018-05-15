@@ -55,19 +55,53 @@ router.delete('/books/:id', (req, res) => {
 router.get('/departments/', (req, res) => {
     db.query("SELECT * FROM departments ORDER BY department ASC", (err, rows) => {
         if(err) throw err
-        res.send(rows)
+        let data = rows.map(row => {
+            return {
+                id: row.department_id,
+                name: row.department
+            }
+        })
+        res.send(data)
     })
 })
 
 router.get('/departments/:id/courses', (req, res) => {
     if(req.params.id != 'undefined') {
-        db.query("SELECT course_id, course, name FROM courses WHERE department_id=" + req.params.id, (err, rows) => {
+        db.query("SELECT course_id, course FROM courses WHERE department_id=" + req.params.id, (err, rows) => {
             if(err) throw err
-            res.send(rows)
+            let data = rows.map(row => {
+                return {
+                    id: row.course_id,
+                    code: row.course
+                }
+            })
+            res.send(data)
         })
     } else {
         res.send([])
     }
 })
+
+router.get('/courses', (req, res) => {
+    db.query("SELECT course_id, course FROM courses", (err, rows) => {
+        if(err) throw err
+        res.send(rows)
+    })
+})
+
+router.get('/courses/:id', (req, res) => {
+    db.query("SELECT * FROM books INNER JOIN book_courses ON books.book_id = book_courses.book_id WHERE course_id =" + req.params.id, (err, rows) => {
+        if(err) throw err
+        let data = rows.map(row => {
+            return {
+                id: row.book_id,
+                title: row.title,
+                price: row.price,
+            }
+        })
+        res.send(data)
+    })
+})
+    
 
 module.exports = router
