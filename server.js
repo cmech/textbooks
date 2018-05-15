@@ -10,9 +10,9 @@ const port = 5000
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-// app.use(express.static('public'))
+app.use(express.static('build'))
 // app.use(express.static('client/dist/client'))
-app.set('view engine', 'pug')
+// app.set('view engine', 'pug')
 
 // app.use(passport.initialize())
 // app.use(passport.session())
