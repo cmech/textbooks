@@ -6,10 +6,8 @@ class CourseSelector extends Component {
     super(props)
 
     this.state = {
-      data: {
-        departments: [],
-        courses: []
-      },
+      departments: [],
+      courses: [],
       department: "",
       course: {
         id: "",
@@ -22,42 +20,51 @@ class CourseSelector extends Component {
     this.handleCourseChange = this.handleCourseChange.bind(this)
   }
   
-  fetchData() {
-    this.setState({
-      data: {
-        departments: [
-          {
-            id: 1,
-            name: "Mathematics"
-          },
-          {
-            id: 2,
-            name: "Engineering"
-          },
-          {
-            id: 3,
-            name: "Physics"
-          }
-        ],
-        courses: [
-          {
-            id: 1,
-            department_id: 1,
-            code: "MATH 1ZB3"
-          },
-          {
-            id: 2,
-            department_id: 2,
-            code: "ENG 1D04"
-          }
-        ]
-      }
-    }) 
+  fetchDepartments() {
+    fetch("/api/departments")
+      .then(res => res.json())
+      .then(departments => this.setState({departments}))
+    // this.setState({
+    //   data: {
+    //     departments: [
+    //       {
+    //         id: 1,
+    //         name: "Mathematics"
+    //       },
+    //       {
+    //         id: 2,
+    //         name: "Engineering"
+    //       },
+    //       {
+    //         id: 3,
+    //         name: "Physics"
+    //       }
+    //     ],
+    //     courses: [
+    //       {
+    //         id: 1,
+    //         department_id: 1,
+    //         code: "MATH 1ZB3"
+    //       },
+    //       {
+    //         id: 2,
+    //         department_id: 2,
+    //         code: "ENG 1D04"
+    //       }
+    //     ]
+    //   }
+    // }) 
   }
+  fetchCourses() {
+    fetch("/api/departments/"+this.state.department+"/courses")
+      .then(res => res.json())
+      .then(courses => this.setState({courses}))
+  }
+
   handleDepartmentChange(e) {
     this.setState({
       department: e.target.value
-    })
+    }, () => this.fetchCourses())    
   }
   handleCourseChange(e) {
     this.setState({ 
@@ -69,7 +76,7 @@ class CourseSelector extends Component {
   }
 
   componentDidMount() {
-    this.fetchData()
+    this.fetchDepartments()
   }
 
   render() {
@@ -82,7 +89,7 @@ class CourseSelector extends Component {
           onChange={this.handleDepartmentChange}
         >
           <option value="0">-- Select Department --</option>
-          {this.state.data.departments.map(department => {
+          {this.state.departments.map(department => {
             return (
               <option value={department.id} key={department.id}>{department.name}</option>
             )
@@ -96,8 +103,7 @@ class CourseSelector extends Component {
           onChange={this.handleCourseChange}
         >
           <option value="0">-- Select Course --</option>
-          {this.state.data.courses
-            .filter(course => course.department_id === parseInt(this.state.department, 10))
+          {this.state.courses
             .map(course => {
               return (
                 <option value={course.id} key={course.id} id={"courseOption"+course.id}>{course.code}</option>
