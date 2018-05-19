@@ -43,7 +43,7 @@ class Course extends Component {
   }
 
   fetchBooks() {
-    fetch("/api/courses/"+this.props.match.params.courseId)
+    fetch("/api/books/course/"+this.props.match.params.courseId)
     .then(res => res.json())
     .then(data => {
       let noBooks = false

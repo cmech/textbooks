@@ -1,8 +1,8 @@
 const express = require('express')
-const db = require('../database')
+const db = require('./database')
 const router = express.Router()
 
-// *** API Books *** //
+// *** BOOKS *** //
 
 router.get('/books', (req, res) => {
     db.query("SELECT * FROM books", (err, rows) => {
@@ -31,12 +31,6 @@ router.get('/books/:id', (req, res) => {
     })
 })
 
-router.get('/books/course/:id', (req, res) => {
-    db.query("SELECT * FROM books WHERE book_id in (SELECT book_id FROM book_courses WHERE course_id = " + req.params.id + ")", (err, rows) => {
-        if(err) throw err
-        res.send(rows)
-    })
-})
 router.post('/books', (req, res) => {
     let title = req.body.bookTitle
     let price = req.body.bookPrice
@@ -58,7 +52,29 @@ router.delete('/books/:id', (req, res) => {
     })
 })
 
-// *** API Courses *** //
+router.get('/books/course/:id', (req, res) => {
+    db.query("SELECT * FROM books INNER JOIN book_courses ON books.book_id = book_courses.book_id WHERE course_id =" + req.params.id, (err, bookRows) => {
+        
+        db.query("SELECT course FROM courses WHERE course_id=" + req.params.id, (err, courseRow) => {
+
+            let books = bookRows.map(row => {
+                return {
+                    id: row.book_id,
+                    title: row.title,
+                    price: row.price,
+                }
+            })
+            console.log(courseRow)
+            let data = {
+                course: courseRow[0].course,
+                books: books
+            }
+            res.send(data)
+        })
+    })
+})
+
+// *** DEPARTMENTS/COURSES *** //
 
 router.get('/departments/', (req, res) => {
     db.query("SELECT * FROM departments ORDER BY department ASC", (err, rows) => {
@@ -88,36 +104,6 @@ router.get('/departments/:id/courses', (req, res) => {
     } else {
         res.send([])
     }
-})
-
-router.get('/courses', (req, res) => {
-    db.query("SELECT course_id, course FROM courses", (err, rows) => {
-        if(err) throw err
-        res.send(rows)
-    })
-})
-
-router.get('/courses/:id', (req, res) => {
-    db.query("SELECT * FROM books INNER JOIN book_courses ON books.book_id = book_courses.book_id WHERE course_id =" + req.params.id, (err, bookRows) => {
-        
-        db.query("SELECT course FROM courses WHERE course_id=" + req.params.id, (err, courseRow) => {
-
-            let books = bookRows.map(row => {
-                return {
-                    id: row.book_id,
-                    title: row.title,
-                    price: row.price,
-                }
-            })
-            console.log(courseRow)
-            let data = {
-                course: courseRow[0].course,
-                books: books
-            }
-            res.send(data)
-        })
-    })
-})
-    
+})  
 
 module.exports = router
