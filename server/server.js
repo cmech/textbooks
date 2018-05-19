@@ -1,21 +1,9 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const bcrypt = require('bcryptjs')
 const passport = require('passport')
-  , FacebookStrategy = require('passport-facebook').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 
 const db = require('./database')
-
-// *** HTTPS SETUP *** //
-// var https = require('https');
-// var fs = require('fs');
-
-// var options = {
-//     key: fs.readFileSync( './localhost.key' ),
-//     cert: fs.readFileSync( './localhost.cert' ),
-//     requestCert: false,
-//     rejectUnauthorized: false
-// };
 
 // *** Server Setup *** //
 
@@ -47,7 +35,6 @@ app.get('/auth/facebook/callback',
 // *** ROUTES *** //
 app.use('/api', require('./api'))
 
-// var server = https.createServer( options, app );
 app.listen(port, () => { 
     console.log('Listening on port ' + port)
 })

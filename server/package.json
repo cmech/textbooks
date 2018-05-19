@@ -10,7 +10,8 @@
   "scripts": {
     "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "scss": "node-sass --watch public/styles/src -o public/styles"
+    "scss": "node-sass --watch public/styles/src -o public/styles",
+    "heroku-postbuild": "cd client/ && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "author": "Caleb Mech",
   "license": "MIT",
@@ -19,6 +20,8 @@
     "commander": "^2.15.1",
     "express": "^4.16.3",
     "mysql": "^2.15.0",
+    "passport": "^0.4.0",
+    "passport-facebook": "^2.1.1",
     "request": "^2.85.0"
   },
   "devDependencies": {
