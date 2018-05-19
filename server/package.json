@@ -11,7 +11,7 @@
     "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "scss": "node-sass --watch public/styles/src -o public/styles",
-    "heroku-postbuild": "cd client/ && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
+    "heroku-postbuild": "cd ../client/ && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "author": "Caleb Mech",
   "license": "MIT",
