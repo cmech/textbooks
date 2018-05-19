@@ -2,32 +2,29 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 import './Course.css'
+import { ErrorMessage, handleFetchError } from '../components/ErrorMessage';
 
 function BookList(props) {
-  if(props.noBooks === true) {
-    return <p>There are no books on sale for this course.</p>
-  } else {
-    return (
-      <ul className="BookList">
-        {props.books.map(book => {
-          return (
-            <li key={book.id}>
-              <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">
-                    <Link to={'/book/'+book.id}>{book.title}</Link>
-                  </h5>
-                  <h6 className="card-subtitle text-muted mb-2">
-                    ${book.price}
-                  </h6>
-                </div>
-              </div>  
-            </li>
-          )
-        })}
-      </ul> 
-    )
-  }
+  return (
+    <ul className="BookList">
+      {props.books.map(book => {
+        return (
+          <li key={book.id}>
+            <div className="card">
+              <div className="card-body">
+                <h5 className="card-title">
+                  <Link to={'/book/'+book.id}>{book.title}</Link>
+                </h5>
+                <h6 className="card-subtitle text-muted mb-2">
+                  ${book.price}
+                </h6>
+              </div>
+            </div>  
+          </li>
+        )
+      })}
+    </ul> 
+  )
 }
 
 class Course extends Component {
@@ -37,27 +34,45 @@ class Course extends Component {
     this.state = {
       books: [],
       courseName: "",
-      noBooks: false,
-      loading: true
+      loading: true,
+      error: {
+        display: true,
+        message: "Error 500 - Internal server error.",
+        color: "warning"
+      },
     }
+
+
+    this.handleFetchError = handleFetchError.bind(this)
   }
 
   fetchBooks() {
     fetch("/api/books/course/"+this.props.match.params.courseId)
+    .then(res => { 
+      if(res.status !== 200) {
+          throw Error(res.status)
+      } else {
+          return res 
+      }
+    })
     .then(res => res.json())
     .then(data => {
-      let noBooks = false
+      let error = {}
       if(data.books.length === 0) {
-        noBooks = true 
+        error = {
+          display: true,
+          message: "No books are on sale for this course.",
+          color: "secondary"
+        }
       }
       this.setState({
         books: data.books,
         courseName: data.course,
-        noBooks,
+        error,
         loading: false,
       })
     })
-    .catch(err => console.log(err))
+    .catch(err => this.handleFetchError(err))
   }
 
   componentDidMount() {
@@ -77,9 +92,13 @@ class Course extends Component {
     }
     return (
       <section className="container">
-        <h2>Course: {this.state.courseName}</h2>
+        <h2 className="pageTitle">Course: {this.state.courseName}</h2>
 
-        <BookList noBooks={this.state.noBooks} books={this.state.books} />
+        {this.state.error.display === true &&
+          <ErrorMessage error={this.state.error} />
+        }
+
+        <BookList books={this.state.books} />
       </section>
     )
   }

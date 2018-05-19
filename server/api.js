@@ -37,7 +37,7 @@ router.post('/books', (req, res) => {
     let query = "INSERT INTO books (title, price) VALUES ('"+title+"', '"+price+"')"
     db.query(query, (err, rows) => {
         if(err) throw err
-        res.status(201).send("Thanks!")
+        res.status(201)
     })
 })
 

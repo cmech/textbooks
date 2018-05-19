@@ -9,3 +9,7 @@ h1 {
 #mainHeader > nav > section > select, #mainHeader > nav > section > button  {
     margin: .5rem;
 }
+
+h2.pageTitle {
+    padding-bottom: 1rem;
+}

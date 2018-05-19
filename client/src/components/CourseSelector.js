@@ -16,7 +16,6 @@ class CourseSelector extends Component {
       loadingCourses: false
     }
     
-    
     this.handleDepartmentChange = this.handleDepartmentChange.bind(this)
     this.handleCourseChange = this.handleCourseChange.bind(this)
   }
@@ -25,36 +24,7 @@ class CourseSelector extends Component {
     fetch("/api/departments")
       .then(res => res.json())
       .then(departments => this.setState({departments}))
-    // this.setState({
-    //   data: {
-    //     departments: [
-    //       {
-    //         id: 1,
-    //         name: "Mathematics"
-    //       },
-    //       {
-    //         id: 2,
-    //         name: "Engineering"
-    //       },
-    //       {
-    //         id: 3,
-    //         name: "Physics"
-    //       }
-    //     ],
-    //     courses: [
-    //       {
-    //         id: 1,
-    //         department_id: 1,
-    //         code: "MATH 1ZB3"
-    //       },
-    //       {
-    //         id: 2,
-    //         department_id: 2,
-    //         code: "ENG 1D04"
-    //       }
-    //     ]
-    //   }
-    // }) 
+      .catch(err => console.error(err))
   }
   fetchCourses() {
     this.setState({ loadingCourses: true })
@@ -64,6 +34,7 @@ class CourseSelector extends Component {
         courses,
         loadingCourses: false
       }))
+      .catch(err => console.error(err))
   }
 
   handleDepartmentChange(e) {
