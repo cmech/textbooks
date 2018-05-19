@@ -1,0 +1,8 @@
+ul.BookList {
+    list-style: none;
+    padding: 0
+}
+
+ul.BookList li {
+    margin-bottom: 1rem;
+}

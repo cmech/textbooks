@@ -12,7 +12,8 @@ class CourseSelector extends Component {
       course: {
         id: "",
         code: ""
-      }
+      },
+      loadingCourses: false
     }
     
     
@@ -56,9 +57,13 @@ class CourseSelector extends Component {
     // }) 
   }
   fetchCourses() {
+    this.setState({ loadingCourses: true })
     fetch("/api/departments/"+this.state.department+"/courses")
       .then(res => res.json())
-      .then(courses => this.setState({courses}))
+      .then(courses => this.setState({
+        courses,
+        loadingCourses: false
+      }))
   }
 
   handleDepartmentChange(e) {
@@ -81,17 +86,26 @@ class CourseSelector extends Component {
 
   render() {
     return (
-      <section>
+      <section className="form-inline CourseSelector">
         <select 
           name="department" 
           id="departmentSelect" 
           value={this.state.department} 
           onChange={this.handleDepartmentChange}
+          className="form-control"
         >
           <option value="0">-- Select Department --</option>
           {this.state.departments.map(department => {
+            let name = department.name
+
+            if(name.length > 30) {
+              name = name.substring(0, 30-3)+"..."
+            }
+
             return (
-              <option value={department.id} key={department.id}>{department.name}</option>
+              <option value={department.id} key={department.id}>
+                {name}
+              </option>
             )
           })}
         </select>
@@ -101,6 +115,8 @@ class CourseSelector extends Component {
           id="courseSelect"
           value={this.state.course.id}
           onChange={this.handleCourseChange}
+          className="form-control"
+          disabled={this.state.loadingCourses}
         >
           <option value="0">-- Select Course --</option>
           {this.state.courses
@@ -117,6 +133,7 @@ class CourseSelector extends Component {
           type="submit" 
           disabled={this.state.course.id === "" || this.state.course.id ==="0"}
           onClick={(e) => this.props.submitFunc(e, this.state.course)}
+          className="btn"
         >
           {this.props.action}
         </button>

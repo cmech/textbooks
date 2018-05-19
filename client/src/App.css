@@ -2,6 +2,10 @@ h1 {
     font-family: 'Playfair Display', Georgia, 'Times New Roman', serif
 }
 
-#searchBar {
+#mainHeader nav {
     box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, .05)
+}
+
+#mainHeader > nav > section > select, #mainHeader > nav > section > button  {
+    margin: .5rem;
 }

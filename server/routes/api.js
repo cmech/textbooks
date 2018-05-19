@@ -16,9 +16,17 @@ router.get('/books/:id', (req, res) => {
         if(err) throw err
 
         if(rows.length != 0) {
-            res.send(rows)
+            let row = rows[0]
+            let data = {
+                id: row.book_id,
+                title: row.title,
+                price: row.price,
+                seller: row.user_id,
+                datePosted: row.date_created,
+            }
+            res.send(data)
         } else {
-            res.sendStatus(404)
+            res.sendStatus(204)
         }
     })
 })
@@ -90,16 +98,24 @@ router.get('/courses', (req, res) => {
 })
 
 router.get('/courses/:id', (req, res) => {
-    db.query("SELECT * FROM books INNER JOIN book_courses ON books.book_id = book_courses.book_id WHERE course_id =" + req.params.id, (err, rows) => {
-        if(err) throw err
-        let data = rows.map(row => {
-            return {
-                id: row.book_id,
-                title: row.title,
-                price: row.price,
+    db.query("SELECT * FROM books INNER JOIN book_courses ON books.book_id = book_courses.book_id WHERE course_id =" + req.params.id, (err, bookRows) => {
+        
+        db.query("SELECT course FROM courses WHERE course_id=" + req.params.id, (err, courseRow) => {
+
+            let books = bookRows.map(row => {
+                return {
+                    id: row.book_id,
+                    title: row.title,
+                    price: row.price,
+                }
+            })
+            console.log(courseRow)
+            let data = {
+                course: courseRow[0].course,
+                books: books
             }
+            res.send(data)
         })
-        res.send(data)
     })
 })
     
