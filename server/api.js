@@ -12,23 +12,37 @@ router.get('/books', (req, res) => {
 })
 
 router.get('/books/:id', (req, res) => {
-    db.query("SELECT * FROM books WHERE book_id = " + req.params.id, (err, rows) => {
-        if(err) throw err
-
-        if(rows.length != 0) {
-            let row = rows[0]
-            let data = {
-                id: row.book_id,
-                title: row.title,
-                price: row.price,
-                seller: row.user_id,
-                datePosted: row.date_created,
+    let id = parseInt(req.params.id)
+    if(id) {
+        let query = "SELECT * FROM books INNER JOIN users ON books.user_id = users.user_id INNER JOIN book_courses ON books.book_id = book_courses.book_id INNER JOIN courses ON book_courses.course_id = courses.course_id WHERE books.book_id =" + id
+        db.query(query, (err, rows) => {
+            if(err) throw err
+            console.log(rows)
+            if(rows.length != 0) {
+                let row = rows[0]
+                let courses = rows.map((row) => {
+                    return { id: row.course_id, code: row.course }
+                })
+                let data = {
+                    id: row.book_id,
+                    title: row.title,
+                    price: row.price,
+                    courses: courses,
+                    seller: {
+                        id: row.user_id,
+                        fb: row.fb_id,
+                        name: row.first_name+" "+row.last_name
+                    },
+                    datePosted: row.date_created,
+                }
+                res.send(data)
+            } else {
+                res.sendStatus(204)
             }
-            res.send(data)
-        } else {
-            res.sendStatus(204)
-        }
-    })
+        })
+    } else {  
+        res.sendStatus(400)
+    }
 })
 
 router.post('/books', (req, res) => {
