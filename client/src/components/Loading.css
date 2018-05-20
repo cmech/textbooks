@@ -1,0 +1,14 @@
+#loadingIndicator {
+    text-align: center
+}
+
+.loadingCircle {
+    font-size: 2.5em;
+    padding: 0 3px;
+    color: hsl(330, 100%, 24%);
+    user-select: none;
+}
+
+.loadingCircle.active {
+    color: hsl(330, 100%, 10%);
+}
