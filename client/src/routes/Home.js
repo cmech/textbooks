@@ -23,7 +23,7 @@ class Home extends Component {
           </div>
         </div>
 
-        {/* <LoginForm /> */}
+        <LoginForm />
       </section>
     )
   }

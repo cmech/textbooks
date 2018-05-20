@@ -1,0 +1,29 @@
+a#fbLoginButton {
+  background: #4267b2;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  display: inline-flex;
+  padding: 0 .6rem;
+  height: 2.1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all ease .15s;
+}
+a#fbLoginButton:hover {
+  background: #365899;
+  box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.2);
+}
+a#fbLoginButton:focus {
+  background-color: #365899;
+  box-shadow: inset 0px 0px 8px 0px rgba(0,0,0,0.3);
+}
+a#fbLoginButton > svg {
+  margin-right: .4rem;
+  height: 1.1rem;
+
+  align-self: center;
+}
+a#fbLoginButton > span {
+  align-self: center;
+  padding-top: 2px;
+}
