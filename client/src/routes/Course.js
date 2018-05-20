@@ -2,28 +2,36 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 import './Course.css'
-import { ErrorMessage, handleFetchError } from '../components/ErrorMessage';
+import { ErrorMessage, handleFetchError } from '../components/ErrorMessage'
+import Loading from '../components/Loading'
 
 function BookList(props) {
   return (
-    <ul className="BookList">
+    <div className="BookList card-deck">
       {props.books.map(book => {
+        let title = book.title
+        if(title.length > 30) {
+          title = title.substring(0, 48-3)+"..."
+        }
         return (
-          <li key={book.id}>
-            <div className="card">
-              <div className="card-body">
+            <div className="card flex-md-row" id="bookListCard" key={book.id}>
+              <img height="150" src="/images/book4.jpg" alt="Textbook" className="card-img-right flex-auto d-none d-lg-block" />
+              <div className="card-body d-flex flex-column align-items-start">
                 <h5 className="card-title">
-                  <Link to={'/book/'+book.id}>{book.title}</Link>
+                  <Link to={'/book/'+book.id}>{title}</Link>
                 </h5>
-                <h6 className="card-subtitle text-muted mb-2">
+                
+                <div class="card-footer">
+                  <span className="card-subtitle text-muted my-1 h3">
                   ${book.price}
-                </h6>
+                  </span>
+                </div>
               </div>
+              
             </div>  
-          </li>
         )
       })}
-    </ul> 
+    </div> 
   )
 }
 
@@ -88,7 +96,7 @@ class Course extends Component {
 
   render() {
     if(this.state.loading)  {
-      return <h2>Loading</h2>
+      return <Loading />
     }
     return (
       <section className="container">

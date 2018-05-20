@@ -6,3 +6,20 @@ ul.BookList {
 ul.BookList li {
     margin-bottom: 1rem;
 }
+
+#bookListCard > .card-body {
+    padding:0;
+}
+
+#bookListCard .card-title {
+    margin: auto;
+    padding: 0 1.5rem;
+    display: block;
+    width: 100%;
+    height: 2rem;
+}
+
+#bookListCard .card-footer {
+    width: 100%;
+    margin-top: auto;
+}
