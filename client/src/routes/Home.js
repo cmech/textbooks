@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import LoginForm from '../components/LoginForm';
 
 class Home extends Component {
   render() {
@@ -21,6 +22,8 @@ class Home extends Component {
               <div className="card"><img className="card-img-top" src="/images/book6.jpg" alt="Textbook"/></div>
           </div>
         </div>
+
+        {/* <LoginForm /> */}
       </section>
     )
   }
