@@ -1,0 +1,29 @@
+a#message {
+    background: #0084ff;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    display: inline-flex;
+    padding: 0 .6rem;
+    height: 2.1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all ease .15s;
+}
+a#message:hover {
+    background: #2093ff;
+    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.2);
+}
+a#message:focus {
+    background-color: #0084ff;
+    box-shadow: inset 0px 0px 8px 0px rgba(0,0,0,0.3);
+}
+a#message > svg {
+    margin-right: .4rem;
+    height: 1.1rem;
+
+    align-self: center;
+}
+a#message > span {
+    align-self: center;
+    padding-top: 2px;
+}
