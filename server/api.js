@@ -17,7 +17,6 @@ router.get('/books/:id', (req, res) => {
         let query = "SELECT * FROM books INNER JOIN users ON books.user_id = users.user_id INNER JOIN book_courses ON books.book_id = book_courses.book_id INNER JOIN courses ON book_courses.course_id = courses.course_id WHERE books.book_id =" + id
         db.query(query, (err, rows) => {
             if(err) throw err
-            console.log(rows)
             if(rows.length != 0) {
                 let row = rows[0]
                 let courses = rows.map((row) => {
@@ -78,7 +77,6 @@ router.get('/books/course/:id', (req, res) => {
                     price: row.price,
                 }
             })
-            console.log(courseRow)
             let data = {
                 course: courseRow[0].course,
                 books: books
