@@ -89,7 +89,7 @@ class Course extends Component {
 
   componentDidUpdate(prevProps) {
     if(prevProps.match.params.courseId!==this.props.match.params.courseId) {
-      this.setState({ loading: false })
+      this.setState({ loading: true })
       this.fetchBooks()
     }
   }
