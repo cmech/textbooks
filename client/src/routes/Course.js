@@ -100,7 +100,7 @@ class Course extends Component {
     }
     return (
       <section className="container">
-        <h2 className="pageTitle">Course: {this.state.courseName}</h2>
+        <h2 className="pageTitle">Course: <span className="text-primary">{this.state.courseName}</span></h2>
 
         {this.state.error.display === true &&
           <ErrorMessage error={this.state.error} />
