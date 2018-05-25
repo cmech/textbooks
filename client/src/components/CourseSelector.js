@@ -65,7 +65,7 @@ class CourseSelector extends Component {
           onChange={this.handleDepartmentChange}
           className="form-control"
         >
-          <option value="0">-- Select Department --</option>
+          <option value="0" disabled selected>Select Department...</option>
           {this.state.departments.map(department => {
             let name = department.name
 
@@ -89,7 +89,7 @@ class CourseSelector extends Component {
           className="form-control"
           disabled={this.state.loadingCourses}
         >
-          <option value="0">-- Select Course --</option>
+          <option value="0"  disabled selected>Select Course...</option>
           {this.state.courses
             .map(course => {
               return (
