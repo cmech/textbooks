@@ -4,28 +4,36 @@ import { Link } from 'react-router-dom'
 import './Course.css'
 import { ErrorMessage, handleFetchError } from '../components/ErrorMessage'
 import Loading from '../components/Loading'
+import ProfileIcon from '../components/ProfileIcon';
+import TimeAgo from 'timeago-react'
 
 function BookList(props) {
   return (
-    <div className="BookList card-deck">
+    <div className="BookList w-100">
       {props.books.map(book => {
         let title = book.title
-        if(title.length > 30) {
-          title = title.substring(0, 48-3)+"..."
+        if(title.length > 40) {
+          title = title.substring(0, 58-3)+"..."
         }
         return (
-            <div className="card flex-md-row" id="bookListCard" key={book.id}>
-              <img height="150" src="/images/book4.jpg" alt="Textbook" className="card-img-right flex-auto d-none d-lg-block" />
+            <div className="card flex-row mb-3 bookListCard" key={book.id}>
+              <img height="155" src="/images/book4.jpg" alt="Textbook" className="card-img-right flex-auto d-none d-block" />
               <div className="card-body d-flex flex-column align-items-start">
-                <h5 className="card-title">
-                  <Link to={'/book/'+book.id}>{title}</Link>
+                <h5 className="card-title mb-1">
+                <Link className="text-dark" to={'/book/'+book.id}>{book.title}</Link>
                 </h5>
-                
-                <div class="card-footer">
-                  <span className="card-subtitle text-muted my-1 h3">
-                  ${book.price}
-                  </span>
+                <p className="text-secondary mb-1">Posted <TimeAgo className="text-secondary" datetime={book.datePosted} locale='en' live={false} /></p>
+                <div className="card-text">
+                <span className="mt-2 h3">
+                ${book.price}
+                </span>
                 </div>
+                
+                {/* <div className="card-footer">
+                </div> */}
+              </div>
+              <div className="profileIcon mr-4 d-none d-md-block" style={{alignSelf: "center"}}>
+                <ProfileIcon id="1293560184108742"/>
               </div>
               
             </div>  
@@ -100,13 +108,16 @@ class Course extends Component {
     }
     return (
       <section className="container">
-        <h2 className="pageTitle">Course: <span className="text-primary">{this.state.courseName}</span></h2>
+        <div className="row pageTitle">
+          <h2>{this.state.courseName}</h2>
+        </div>
+        <div className="row">
+          {this.state.error.display === true &&
+            <ErrorMessage error={this.state.error} />
+          }
 
-        {this.state.error.display === true &&
-          <ErrorMessage error={this.state.error} />
-        }
-
-        <BookList books={this.state.books} />
+          <BookList books={this.state.books} />
+        </div>
       </section>
     )
   }

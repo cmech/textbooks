@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import withRouter from 'react-router-dom/withRouter';
+import './CourseSelector.css'
 
 class CourseSelector extends Component {
   constructor(props) {
@@ -63,12 +64,12 @@ class CourseSelector extends Component {
           id="departmentSelect" 
           value={this.state.department} 
           onChange={this.handleDepartmentChange}
-          className="form-control"
+          className="form-control mb-mdd-2"
         >
-          <option value="0" disabled selected>Select Department...</option>
+          <option value="0" defaultValue className="disabled">Select Department...</option>
           {this.state.departments.map(department => {
             let name = department.name
-
+ 
             if(name.length > 30) {
               name = name.substring(0, 30-3)+"..."
             }
@@ -86,10 +87,9 @@ class CourseSelector extends Component {
           id="courseSelect"
           value={this.state.course.id}
           onChange={this.handleCourseChange}
-          className="form-control"
-          disabled={this.state.loadingCourses}
+          className="form-control ml-lg-3 mr-3"
         >
-          <option value="0"  disabled selected>Select Course...</option>
+          <option value="0" defaultValue className="disabled">Select Course...</option>
           {this.state.courses
             .map(course => {
               return (
@@ -104,7 +104,7 @@ class CourseSelector extends Component {
           type="submit" 
           disabled={this.state.course.id === "" || this.state.course.id ==="0"}
           onClick={(e) => this.props.submitFunc(e, this.state.course)}
-          className="btn"
+          className="btn btn-secondary px-4"
         >
           {this.props.action}
         </button>

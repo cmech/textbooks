@@ -2,11 +2,50 @@
 
 $theme-colors: (
   "primary": #7a003c,
+  "gold": #f7be54 
 );
 
-$headings-font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
 $font-family-sans-serif: 'Lato', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
 
-@import "../../scss/bootstrap";
 
+@import "scss/bootstrap";
+
+@include media-breakpoint-down(sm) {
+  .pageTitle {
+    font-size: 0.75em;
+    border-radius: 0 !important;
+
+    h2 {
+      font-size: 2em;
+    }
+  }
+   
+  .bookListCard .card-title {
+    overflow: scroll;
+    line-height: 1.2em;
+    max-height: 2.4em; 
+  }
+  
+}
+
+@include media-breakpoint-down(md) {
+  .mb-mdd-2 {
+    margin-bottom: 0.5rem !important;
+  }
+  .align-self-center-mdd {
+    align-self: center !important;
+  }
+}
+
+@include media-breakpoint-only(xs) {
+  .pl-xso-3 {
+    padding-left: 1rem !important;
+  }
+}
+
+@include media-breakpoint-only(md) {
+  #mainHeader .CourseSelector {
+    justify-content: flex-end !important;
+  }
+}
 

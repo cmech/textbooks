@@ -1,0 +1,11 @@
+select#departmentSelect {
+    width: 18rem;
+}
+
+select#courseSelect {
+    width: 12rem;
+}
+
+option.disabled {
+    color: graytext;
+}

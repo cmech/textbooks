@@ -41,20 +41,25 @@ class App extends Component {
 
       <BrowserRouter>
         <div>
-          <header id="mainHeader">
-          <Link to="/">
-            <div className="py-4 text-center text-white bg-primary">
-              <h1>Textbooks</h1>
-            </div>
-            </Link>
-            <nav className="navbar bg-light justify-content-center mb-4 box-shadow border-bottom">
-              <CourseSelector action="Find" submitFunc={this.goToCourse} />
-            </nav>
+          <header id="mainHeader" className="mb-md-4">
+            <div className="container">
+                <div className="row">
+                  <div className="col-md-3">
+                    <h1 className="pl-xso-3">
+                      <Link to="/">Textbooks</Link>
+                    </h1>
+                  </div>
+                 <div className="col-md-9">
+                  <nav className="navbar justify-content-end">
+                    <CourseSelector action="Find" submitFunc={this.goToCourse} />
+                  </nav> 
+                 </div>
+                </div>
+              </div>
           </header>
-
           <div className="container">
           <div className="row">
-            <div className="col-md-9">
+            <div id="mainContent" className="col-lg-9 mb-4">
               <Route exact path='/' component={Home} />
               <Route path='/course/:courseId' component={Course} />
               <Route path='/book/:bookId' component={Book} />

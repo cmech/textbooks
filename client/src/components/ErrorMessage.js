@@ -17,7 +17,7 @@ function handleFetchError(err) {
 class ErrorMessage extends Component {
     render() {
         return (
-            <div className={"alert alert-"+this.props.error.color} role="alert">
+            <div className={"w-100 alert alert-"+this.props.error.color} role="alert">
                 {this.props.error.message}
             </div>
         )
