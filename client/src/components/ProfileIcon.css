@@ -1,0 +1,32 @@
+.profileIcon {
+    text-align: center;
+    width: fit-content;
+}
+
+.profilePicture {
+    width: 80px;
+    border-radius: 50%;
+    border: 3px solid var(--gold);
+}
+
+.profileLabel {
+    margin: -19px auto auto auto;
+}
+
+.profileLabel > a {
+    background: var(--gold);
+    padding: .3em 1em;
+    border-radius: 1em;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: white;
+    font-weight: 600;
+    min-width: 7em;
+    display: inline-block;
+}
+
+.profileLabel > a:hover {
+    text-decoration: none;
+    background: hsl(39, 91%, 55%);
+}
