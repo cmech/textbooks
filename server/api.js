@@ -30,7 +30,7 @@ router.get('/books/:id', (req, res) => {
                     seller: {
                         id: row.user_id,
                         fb: row.fb_id,
-                        name: row.first_name+" "+row.last_name
+                        name: row.name
                     },
                     datePosted: row.date_created,
                 }
@@ -75,6 +75,7 @@ router.get('/books/course/:id', (req, res) => {
                     id: row.book_id,
                     title: row.title,
                     price: row.price,
+                    datePosted: row.date_created
                 }
             })
             let data = {
@@ -117,5 +118,7 @@ router.get('/departments/:id/courses', (req, res) => {
         res.send([])
     }
 })  
+
+
 
 module.exports = router
