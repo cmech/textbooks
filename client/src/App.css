@@ -1,84 +1,82 @@
 @import url('./bootstrap.css');
 
 h1 {
-    font-weight: 700;
-    font-family: "Montserrat", Georgia, 'Times New Roman', Times, serif;
-    
+  font-weight: 700;
+  font-family: 'Montserrat', Georgia, 'Times New Roman', Times, serif;
 }
 
 h1 a {
-    color: #212529;
+  color: #212529;
 }
 
 #mainHeader {
-    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, .05);
-    border-top: 6px solid var(--primary);
-    border-bottom: 1px solid #dee2e6 !important;
-    padding: 1rem 0;
-    background: white;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+  border-top: 6px solid var(--primary);
+  border-bottom: 1px solid #dee2e6 !important;
+  padding: 1rem 0;
+  background: white;
 }
 
 .pageTitle {
-    font-family: "Lato";
-    color: white;
-    background: var(--primary);
-    padding: 2.5em 2em;
-    margin: -2rem -3rem 2rem -3rem;
-    width: calc(100% + 6rem);
-    border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 8px solid var(--gold)
+  font-family: 'Lato';
+  color: white;
+  background: var(--primary);
+  padding: 2.5em 2em;
+  margin: -2rem -3rem 2rem -3rem;
+  width: calc(100% + 6rem);
+  border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 8px solid var(--gold);
 }
 
 .pageTitle a.bookmarkIcon {
-    width: 2.5rem;
-    cursor: pointer;
+  width: 2.5rem;
+  cursor: pointer;
 }
 
 .pageTitle a.bookmarkIcon svg {
-    width: 2.5rem;
-    fill: white;
+  width: 2.5rem;
+  fill: white;
 }
 
-.pageTitle a.bookmarkIcon:hover svg.bookmarkAdd, .pageTitle a.bookmarkIcon:active svg.bookmarkSolid {
-    display:block;
+.pageTitle a.bookmarkIcon:hover svg.bookmarkAdd,
+.pageTitle a.bookmarkIcon:active svg.bookmarkSolid {
+  display: block;
 }
 
-.pageTitle a.bookmarkIcon svg.bookmarkAdd, 
-.pageTitle a.bookmarkIcon:active svg.bookmarkAdd, 
-.pageTitle a.bookmarkIcon:hover svg.bookmarkOutline, 
-.pageTitle a.bookmarkIcon:active svg.bookmarkOutline, 
+.pageTitle a.bookmarkIcon svg.bookmarkAdd,
+.pageTitle a.bookmarkIcon:active svg.bookmarkAdd,
+.pageTitle a.bookmarkIcon:hover svg.bookmarkOutline,
+.pageTitle a.bookmarkIcon:active svg.bookmarkOutline,
 .pageTitle a.bookmarkIcon svg.bookmarkSolid {
-    display:none;
+  display: none;
 }
-
-
 
 body {
-    background: hsl(330, 5%, 95%)
+  background: hsl(330, 5%, 95%);
 }
 
 #mainContent {
-    /* background: var(--light); */
-    padding: 2em;
-    border: 1px solid rgba(0, 0, 0, 0.125);
-    background: white;
-    border-radius: calc(0.25rem - 1px);
-} 
+  /* background: var(--light); */
+  padding: 2em;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  background: white;
+  border-radius: calc(0.25rem - 1px);
+}
 
 #mainContent .row > div {
-    z-index: 2;
+  z-index: 2;
 }
 
 img.bookPostingImg {
-    width: 100%;
-    box-shadow: 0 0 0.5rem rgba(0, 0, 0, .2);
-    background: var(--light);
+  width: 100%;
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
+  background: var(--light);
 }
 
 .card-img-left {
-    background: rgba(0,0,0,.03);
-    padding: 1em;
-    border-right: 1px solid rgba(0,0,0,.125);
+  background: rgba(0, 0, 0, 0.03);
+  padding: calc(1em + 1px);
+  border-right: 1px solid rgba(0, 0, 0, 0.125);
 }

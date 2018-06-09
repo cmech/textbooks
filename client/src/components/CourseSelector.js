@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import withRouter from 'react-router-dom/withRouter';
+import withRouter from 'react-router-dom/withRouter'
 import './CourseSelector.css'
 
 class CourseSelector extends Component {
@@ -9,45 +9,51 @@ class CourseSelector extends Component {
     this.state = {
       departments: [],
       courses: [],
-      department: "",
+      department: '',
       course: {
-        id: "",
-        code: ""
+        id: '',
+        code: ''
       },
       loadingCourses: false
     }
-    
+
     this.handleDepartmentChange = this.handleDepartmentChange.bind(this)
     this.handleCourseChange = this.handleCourseChange.bind(this)
   }
-  
+
   fetchDepartments() {
-    fetch("/api/departments")
+    fetch('/api/departments')
       .then(res => res.json())
-      .then(departments => this.setState({departments}))
+      .then(departments => this.setState({ departments }))
       .catch(err => console.error(err))
   }
   fetchCourses() {
     this.setState({ loadingCourses: true })
-    fetch("/api/departments/"+this.state.department+"/courses")
+    fetch('/api/departments/' + this.state.department)
       .then(res => res.json())
-      .then(courses => this.setState({
-        courses,
-        loadingCourses: false
-      }))
+      .then(courses =>
+        this.setState({
+          courses,
+          loadingCourses: false
+        })
+      )
       .catch(err => console.error(err))
   }
 
   handleDepartmentChange(e) {
-    this.setState({
-      department: e.target.value
-    }, () => this.fetchCourses())    
+    this.setState(
+      {
+        department: e.target.value
+      },
+      () => this.fetchCourses()
+    )
   }
   handleCourseChange(e) {
-    this.setState({ 
+    this.setState({
       course: {
         id: e.target.value,
-        name: e.target.children.namedItem("courseOption"+e.target.value).innerText
+        code: e.target.children.namedItem('courseOption' + e.target.value)
+          .innerText
       }
     })
   }
@@ -59,51 +65,58 @@ class CourseSelector extends Component {
   render() {
     return (
       <section className="form-inline CourseSelector">
-        <select 
-          name="department" 
-          id="departmentSelect" 
-          value={this.state.department} 
+        <select
+          name="department"
+          id="departmentSelect"
+          value={this.state.department}
           onChange={this.handleDepartmentChange}
           className="form-control mb-mdd-2"
         >
-          <option value="0" defaultValue className="disabled">Select Department...</option>
+          <option value="0" defaultValue className="disabled">
+            Select Department...
+          </option>
           {this.state.departments.map(department => {
             let name = department.name
- 
-            if(name.length > 30) {
-              name = name.substring(0, 30-3)+"..."
+
+            if (name.length > 30) {
+              name = name.substring(0, 30 - 3) + '...'
             }
 
             return (
-              <option value={department.id} key={department.id}>
+              <option value={department._id} key={department._id}>
                 {name}
               </option>
             )
           })}
         </select>
-          
-        <select 
-          name="course" 
+
+        <select
+          name="course"
           id="courseSelect"
           value={this.state.course.id}
           onChange={this.handleCourseChange}
           className="form-control ml-lg-3 mr-3"
         >
-          <option value="0" defaultValue className="disabled">Select Course...</option>
-          {this.state.courses
-            .map(course => {
-              return (
-                <option value={course.id} key={course.id} id={"courseOption"+course.id}>{course.code}</option>
-              )
-            })
-          }
-        
+          <option value="0" defaultValue className="disabled">
+            Select Course...
+          </option>
+          {this.state.courses.map(course => {
+            return (
+              <option
+                value={course._id}
+                key={course._id}
+                id={'courseOption' + course._id}
+              >
+                {course.code}
+              </option>
+            )
+          })}
         </select>
 
-        <button 
-          type="submit" 
-          disabled={this.state.course.id === "" || this.state.course.id ==="0"}
-          onClick={(e) => this.props.submitFunc(e, this.state.course)}
+        <button
+          type="submit"
+          disabled={this.state.course.id === '' || this.state.course.id === '0'}
+          onClick={e => this.props.submitFunc(e, this.state.course)}
           className="btn btn-secondary px-4"
         >
           {this.props.action}

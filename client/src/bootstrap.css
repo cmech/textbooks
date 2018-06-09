@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import url("https://fonts.googleapis.com/css?family=Lato|PT+Serif:400,700");
+@import url("https://fonts.googleapis.com/css?family=Lato:400,600,700|Montserrat:700");
 /*!
  * Bootstrap v4.0.0 (https://getbootstrap.com)
  * Copyright 2011-2018 The Bootstrap Authors
@@ -8396,5 +8396,19 @@ h3 {
     justify-content: flex-end !important;
   }
 }
+.o-75 {
+  opacity: 0.75;
+}
 
-/*# sourceMappingURL=../src/bootstrap.css.map */
+.btn-remove {
+  background: none;
+  border: none;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.btn-remove:focus {
+  outline: none !important;
+}
+
+/*# sourceMappingURL=client/src/bootstrap.css.map */

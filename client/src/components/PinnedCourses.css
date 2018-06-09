@@ -1,0 +1,9 @@
+.numBooks:hover .numBooksNumber,
+.numBooks .numBooksRemove {
+  display: none;
+}
+
+.numBooks:hover .numBooksRemove,
+.numBooks .numBooksNumber {
+  display: initial;
+}
