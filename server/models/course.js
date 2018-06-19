@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
-const Department = require('./department')
 
 const courseSchema = mongoose.Schema({
   code: String,
   title: String,
-  departmentID: { type: mongoose.Schema.Types.ObjectId, ref: 'Department' }
+  departmentID: { type: mongoose.Schema.Types.ObjectId, ref: 'Department' },
+  books: Number
 })
 
 module.exports = mongoose.model('Course', courseSchema)

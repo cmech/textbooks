@@ -1,53 +1,57 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
-import Loading from '../components/Loading'
 import './PinnedCourses.css'
+import { UserContext } from '../UserContext'
 
 class PinnedCourses extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      loading: true,
-      courses: []
+      loading: true
     }
-  }
-
-  componentDidMount() {
-    fetch('/api/users/5b00769b734d1d0aaaaca1cc/pinned')
-      .then(res => res.json())
-      .then(courses => this.setState({ courses, loading: false }))
   }
 
   render() {
     return (
-      <div className="card mb-4">
-        <div className="card-header">Pinned Courses</div>
-        <ul className="list-group list-group-flush">
-          {this.state.loading && <Loading />}
-          {this.state.courses.map(course => {
-            return (
-              <li className="list-group-item" key={course.code}>
-                <Link
-                  to={'/course/' + course.code.replace(' ', '_')}
-                  className="float-left"
-                >
-                  {course.code}
-                </Link>
-                <button className="btn-remove float-right numBooks">
-                  <span className="badge badge-gold text-white numBooksNumber">
-                    {course.books}
-                  </span>
-                  <span className="badge badge-danger numBooksRemove">
-                    &times;
-                  </span>
-                </button>
-              </li>
-            )
-          })}
-        </ul>
-      </div>
+      <UserContext.Consumer>
+        {({ user, handlePin }) => (
+          <div className="card mb-4">
+            <div className="card-header">
+              <span className="float-left">Pinned Courses</span>
+              <i className="fas fa-thumbtack float-right text-dark mt-1 mr-1" />
+            </div>
+            <ul className="list-group list-group-flush">
+              {user.pinnedCourses.map(course => {
+                return (
+                  <li className="list-group-item" key={course.code}>
+                    <Link
+                      to={'/course/' + course.code.replace(' ', '_')}
+                      className="float-left"
+                    >
+                      {course.code}
+                    </Link>
+                    {course.books !== undefined && (
+                      <button className="btn-remove float-right numBooks p-0">
+                        <span className="badge badge-gold text-white numBooksNumber">
+                          {course.books}
+                        </span>
+                        <span
+                          className="badge badge-danger numBooksRemove"
+                          onClick={() => handlePin(course)}
+                        >
+                          &times;
+                        </span>
+                      </button>
+                    )}
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+        )}
+      </UserContext.Consumer>
     )
   }
 }

@@ -28,7 +28,7 @@ class CourseSelector extends Component {
       .catch(err => console.error(err))
   }
   fetchCourses() {
-    this.setState({ loadingCourses: true })
+    this.setState({ loadingCourses: true, courses: [] })
     fetch('/api/departments/' + this.state.department)
       .then(res => res.json())
       .then(courses =>
@@ -100,6 +100,7 @@ class CourseSelector extends Component {
           <option value="0" defaultValue className="disabled">
             Select Course...
           </option>
+          {this.state.loadingCourses && <option disabled>Loading...</option>}
           {this.state.courses.map(course => {
             return (
               <option

@@ -115,6 +115,7 @@ class Course extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    console.log(prevProps.match.params.courseCode !== this.props.match.params.courseCode)
     if (
       prevProps.match.params.courseCode !== this.props.match.params.courseCode
     ) {
@@ -130,7 +131,7 @@ class Course extends Component {
           title={this.props.match.params.courseCode.replace('_', ' ')}
           subtitle={this.state.course.title || '. . .'}
         >
-          <CoursePin course={this.state.course} />
+          {this.state.course._id !== undefined && <CoursePin course={this.state.course} />}
         </PageTitle>
         <div className="row">
           {this.state.loading ? (
@@ -138,8 +139,8 @@ class Course extends Component {
           ) : this.state.error.display === true ? (
             <ErrorMessage error={this.state.error} />
           ) : (
-            <BookList books={this.state.books} />
-          )}
+                <BookList books={this.state.books} />
+              )}
         </div>
       </section>
     )

@@ -6,7 +6,7 @@ import TimeAgo from 'timeago-react'
 import Loading from '../components/Loading'
 import ProfileIcon from '../components/ProfileIcon'
 import PageTitle from '../components/PageTitle'
-import CoursePin from '../components/CoursePin'
+import BookMark from '../components/BookMark'
 
 class Book extends Component {
   constructor(props) {
@@ -60,7 +60,7 @@ class Book extends Component {
       return (
         <section className="container">
           <PageTitle title={book.title}>
-            <CoursePin />
+            <BookMark />
           </PageTitle>
           <div className="row">
             <div className="col-md-4">
@@ -75,11 +75,11 @@ class Book extends Component {
                 <span className="display-4 ">${book.price}</span>
               </p>
 
-              <div class="card flex-md-row my-4">
-                <div class="card-img-left flex-auto d-none d-lg-block align-self-center">
+              <div className="card flex-md-row my-4">
+                <div className="card-img-left flex-auto d-none d-lg-block align-self-center">
                   <ProfileIcon id={book.seller.fb} label={false} />
                 </div>
-                <div class="card-body d-flex flex-column align-items-start">
+                <div className="card-body d-flex flex-column align-items-start">
                   <p>
                     Posted by{' '}
                     <Link to={'/user/' + book.seller.id}>

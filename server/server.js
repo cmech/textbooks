@@ -5,8 +5,6 @@ const path = require('path')
 const compression = require('compression')
 const expressStaticGzip = require('express-static-gzip')
 
-const db = require('./database')
-
 // *** Server Setup *** //
 
 const app = express()
