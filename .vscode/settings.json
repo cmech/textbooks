@@ -9,5 +9,6 @@
   },
   "files.associations": {
     "**/client/src/**/*.js": "javascriptreact"
-  }
+  },
+  "editor.formatOnSave": true
 }
