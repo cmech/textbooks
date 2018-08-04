@@ -4,6 +4,8 @@ import CourseSelector from '../components/CourseSelector'
 import PageTitle from '../components/PageTitle'
 import GetFacebookUsername from '../components/GetFacebookUsername'
 import ImageUpload from '../components/ImageUpload'
+import Loading from '../components/Loading'
+import { handleGenericInputChange } from '../functions'
 
 class Post extends Component {
   constructor(props) {
@@ -12,19 +14,16 @@ class Post extends Component {
     this.state = {
       title: '',
       price: '',
-      courses: []
+      bookImage: {},
+      courses: [],
+      submitting: false
     }
 
-    this.handleInputChange = this.handleInputChange.bind(this)
+    this.handleGenericInputChange = handleGenericInputChange.bind(this)
     this.handlePriceChange = this.handlePriceChange.bind(this)
+    this.handleFileChange = this.handleFileChange.bind(this)
     this.selectCourse = this.selectCourse.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-  }
-
-  handleInputChange(e) {
-    this.setState({
-      [e.target.name]: e.target.value
-    })
   }
 
   handlePriceChange(e) {
@@ -35,12 +34,18 @@ class Post extends Component {
     }
   }
 
+  handleFileChange(e) {
+    this.setState({
+      bookImage: e.target.files[0]
+    })
+  }
+
   selectCourse(e, course) {
     e.preventDefault()
 
     if (
       this.state.courses.find(
-        currentCourse => currentCourse.id === course.id
+        currentCourse => currentCourse._id === course._id
       ) === undefined &&
       this.state.courses.length + 1 <= 4
     ) {
@@ -63,17 +68,18 @@ class Post extends Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    let data = {
-      title: this.state.title,
-      price: this.state.price,
-      courses: this.state.courses.map(course => course.id)
-    }
-    fetch('/api/books/', {
+    this.setState({ submitting: true })
+    let formData = new FormData()
+    formData.append('title', this.state.title)
+    formData.append('price', this.state.price)
+    formData.append('bookImage', this.state.bookImage)
+    formData.append(
+      'courses',
+      JSON.stringify(this.state.courses.map(course => course.id))
+    )
+    fetch('/api/books', {
       method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      body: formData
     })
       .then(res => res.json())
       .then(result =>
@@ -87,10 +93,7 @@ class Post extends Component {
       <section className="container">
         <PageTitle title="Post Book" />
 
-        <form>
-          {/* <div className="form-group">
-            <ImageUpload />
-          </div> */}
+        <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <div className="row">
               <div className="col-md-9">
@@ -101,7 +104,7 @@ class Post extends Component {
                     name="title"
                     id="titleInput"
                     value={this.state.title}
-                    onChange={this.handleInputChange}
+                    onChange={this.handleGenericInputChange}
                     className="form-control"
                     required
                   />
@@ -126,6 +129,7 @@ class Post extends Component {
                 </div>
               </div>
             </div>
+            <ImageUpload handleFileChange={this.handleFileChange} />
           </div>
           <div className="card form-group">
             <div className="card-header">Relevant courses</div>
@@ -135,10 +139,10 @@ class Post extends Component {
             <ul className="list-group list-group-flush">
               {this.state.courses.map(course => {
                 return (
-                  <li key={course.id} className="list-group-item">
+                  <li key={course._id} className="list-group-item">
                     <span className="float-left">{course.code}</span>
                     <button
-                      onClick={e => this.handleRemoveCourse(e, course.id)}
+                      onClick={e => this.handleRemoveCourse(e, course._id)}
                       className="close float-right"
                     >
                       &times;
@@ -151,12 +155,35 @@ class Post extends Component {
           <div className="card form-group">
             <div className="card-header">Contact options</div>
             <div className="card-body">
-              <GetFacebookUsername />
+              <div className="container">
+                <div className="row">
+                  <div className="col-sm-4">
+                    <button className="btn btn-block btn-primary">
+                      Facebook
+                    </button>
+                  </div>
+                  <div className="col-sm-4">
+                    <button className="btn btn-block btn-secondary">
+                      Email
+                    </button>
+                  </div>
+                  <div className="col-sm-4">
+                    <button className="btn btn-block btn-gold">
+                      Instagram
+                    </button>
+                  </div>
+                </div>
+              </div>
+              {/* <GetFacebookUsername /> */}
             </div>
           </div>
-          <button type="submit" className="btn" onClick={this.handleSubmit}>
-            Post
-          </button>
+          {this.state.submitting ? (
+            <Loading />
+          ) : (
+            <button type="submit" className="btn">
+              Post
+            </button>
+          )}
         </form>
       </section>
     )

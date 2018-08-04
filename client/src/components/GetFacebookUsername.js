@@ -29,18 +29,22 @@ class GetFacebookUsername extends Component {
             href="http://facebook.com/profile"
             target="_blank"
             rel="noopener noreferrer"
+            className="btn btn-primary"
+            role="button"
           >
             Get Facebook Link
           </a>
         </p>
-        <input
-          type="text"
-          name="profileUrl"
-          id="profileUrl"
-          className="form-control"
-          onChange={this.handleUrlChange}
-          placeholder="Paste profile URL here"
-        />
+        <p>
+          <input
+            type="text"
+            name="profileUrl"
+            id="profileUrl"
+            className="form-control"
+            onChange={this.handleUrlChange}
+            placeholder="Paste profile URL here"
+          />
+        </p>
         {/* <p>{this.state.userName}</p> */}
         {this.state.userName && <MessengerButton id={this.state.userName} />}
       </section>

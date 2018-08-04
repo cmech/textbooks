@@ -7,6 +7,7 @@ const bookSchema = mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  imageID: String,
   courses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
   seller: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 })

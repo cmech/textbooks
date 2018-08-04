@@ -1,35 +1,23 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-class ImageUpload extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      over: false
-    }
-
-    this.handleDragOver = this.handleDragOver.bind(this)
-  }
-
-  getClasses() {
-    let over = this.state.over ? 'bg-secondary' : 'bg-light'
-    return 'imageUpload p-5 text-white w-25 text-center ' + over
-  }
-
-  handleDragOver(e) {
-    console.log(e.target)
-    this.setState(prevState => {
-      return { over: !prevState.over }
-    })
-  }
-
-  render() {
-    return (
-      <div className={this.getClasses()} onDragOver={this.handleDragOver} drag>
-        +
+function ImageUpload(props) {
+  return (
+    <div className="input-group">
+      <div className="input-group-prepend">
+        <label htmlFor="bookImage" className="input-group-text">
+          Image
+        </label>
       </div>
-    )
-  }
+      <input
+        type="file"
+        name="bookImage"
+        id="bookImage"
+        accept="image/*"
+        className="form-control-file form-control"
+        onChange={props.handleFileChange}
+      />
+    </div>
+  )
 }
 
 export default ImageUpload

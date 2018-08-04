@@ -1,10 +1,16 @@
 import React from 'react'
 
 export const user = {
-  authenticated: true,
-  _id: '5b00769b734d1d0aaaaca1cc',
-  name: 'Caleb Mech',
-  pinnedCourses: []
+  _id: '',
+  name: '',
+  pinnedCourses: [],
+  bookmarks: []
 }
 
-export const UserContext = React.createContext({ user, handlePin: () => {} })
+export const UserContext = React.createContext({
+  user,
+  handlePin: () => {},
+  handleBookmark: () => {},
+  handleLogin: () => {},
+  handleLogout: () => {}
+})

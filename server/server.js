@@ -20,11 +20,10 @@ app.use(compression())
 app.use('/api/departments', require('./api/departments'))
 app.use('/api/books', require('./api/books'))
 app.use('/api/users', require('./api/users'))
+app.use('/bookImages', express.static('./uploads'))
 
-app.get('/*', function(req, res) {
-  res.sendFile(path.join(__dirname + '/../client/build/index.html'), function(
-    err
-  ) {
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/../client/build/index.html'), err => {
     if (err) {
       res.status(500).send(err)
     }

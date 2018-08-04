@@ -5,7 +5,10 @@ class Home extends Component {
   render() {
     return (
       <section className="container">
-        <PageTitle title="Recently added" />
+        <PageTitle title="" />
+        <div className="row mb-3">
+          <h2 className="h3">Bookmarks</h2>
+        </div>
         <div className="row">
           <div className="col-sm">
             <div className="card">

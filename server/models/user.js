@@ -2,9 +2,11 @@ const mongoose = require('mongoose')
 
 const userSchema = mongoose.Schema({
   name: String,
+  email: String,
+  password: String,
   fb: Number,
   pinnedCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
-  markedBooks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }]
+  bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }]
 })
 
 module.exports = mongoose.model('User', userSchema)

@@ -8,59 +8,7 @@ import ProfileIcon from '../components/ProfileIcon'
 import TimeAgo from 'timeago-react'
 import PageTitle from '../components/PageTitle'
 import CoursePin from '../components/CoursePin'
-
-function BookList(props) {
-  return (
-    <div className="BookList w-100">
-      {props.books.map(book => {
-        let title = book.title
-        if (title.length > 40) {
-          title = title.substring(0, 58 - 3) + '...'
-        }
-        return (
-          <div className="card flex-row mb-3 bookListCard" key={book._id}>
-            <Link to={'/book/' + book._id}>
-              <img
-                height="155"
-                src="/images/book4.jpg"
-                alt="Textbook"
-                className="card-img-right flex-auto d-none d-block"
-              />
-            </Link>
-            <div className="card-body d-flex flex-column align-items-start">
-              <h5 className="card-title mb-1">
-                <Link className="text-dark" to={'/book/' + book._id}>
-                  {book.title}
-                </Link>
-              </h5>
-              <p className="text-secondary mb-1">
-                Posted{' '}
-                <TimeAgo
-                  className="text-secondary"
-                  datetime={book.datePosted}
-                  locale="en"
-                  live={false}
-                />
-              </p>
-              <div className="card-text">
-                <span className="mt-2 h3">${book.price}</span>
-              </div>
-
-              {/* <div className="card-footer">
-                </div> */}
-            </div>
-            <div
-              className="profileIcon mr-4 d-none d-md-block"
-              style={{ alignSelf: 'center' }}
-            >
-              <ProfileIcon id="1293560184108742" />
-            </div>
-          </div>
-        )
-      })}
-    </div>
-  )
-}
+import { Truncate } from '../functions'
 
 class Course extends Component {
   constructor(props) {
@@ -115,7 +63,6 @@ class Course extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(prevProps.match.params.courseCode !== this.props.match.params.courseCode)
     if (
       prevProps.match.params.courseCode !== this.props.match.params.courseCode
     ) {
@@ -129,9 +76,11 @@ class Course extends Component {
       <section className="container">
         <PageTitle
           title={this.props.match.params.courseCode.replace('_', ' ')}
-          subtitle={this.state.course.title || '. . .'}
+          subtitle={this.state.course.title || '· · ·'}
         >
-          {this.state.course._id !== undefined && <CoursePin course={this.state.course} />}
+          {this.state.course._id !== undefined && (
+            <CoursePin course={this.state.course} />
+          )}
         </PageTitle>
         <div className="row">
           {this.state.loading ? (
@@ -139,12 +88,65 @@ class Course extends Component {
           ) : this.state.error.display === true ? (
             <ErrorMessage error={this.state.error} />
           ) : (
-                <BookList books={this.state.books} />
-              )}
+            <BookList books={this.state.books} />
+          )}
         </div>
       </section>
     )
   }
+}
+
+function BookList(props) {
+  return (
+    <div className="BookList w-100">
+      {props.books.map(book => {
+        return (
+          <div className="card flex-row mb-3 bookListCard" key={book._id}>
+            <Link to={'/book/' + book._id}>
+              <img
+                height="155"
+                src={
+                  book.imageID !== undefined
+                    ? `/bookImages/compressed/${book.imageID}`
+                    : '/images/no_picture.png'
+                }
+                alt="Textbook"
+                className="card-img-right flex-auto d-none d-block"
+              />
+            </Link>
+            <div className="card-body d-flex flex-column align-items-start">
+              <h5 className="card-title mb-1">
+                <Link className="text-dark" to={'/book/' + book._id}>
+                  <Truncate length="60">{book.title}</Truncate>
+                </Link>
+              </h5>
+              <p className="text-secondary mb-1">
+                Posted{' '}
+                <TimeAgo
+                  className="text-secondary"
+                  datetime={book.datePosted}
+                  locale="en"
+                  live={false}
+                />
+              </p>
+              <div className="card-text">
+                <span className="mt-2 h3">${book.price}</span>
+              </div>
+
+              {/* <div className="card-footer">
+                </div> */}
+            </div>
+            <div
+              className="profileIcon mr-4 d-none d-md-block"
+              style={{ alignSelf: 'center' }}
+            >
+              <ProfileIcon id="1293560184108742" />
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
 }
 
 export default Course

@@ -1,11 +1,13 @@
-select#departmentSelect {
-    width: 18rem;
+#departmentSelect {
+  width: 18rem;
+  z-index: 100;
 }
 
-select#courseSelect {
-    width: 12rem;
+#courseSelect {
+  width: 14rem;
+  z-index: 90;
 }
 
 option.disabled {
-    color: graytext;
+  color: graytext;
 }

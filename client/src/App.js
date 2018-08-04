@@ -13,10 +13,11 @@ import Book from './routes/Book'
 import Post from './routes/Post'
 import Sidebar from './components/Sidebar'
 import { UserContext, user } from './UserContext'
+import ScrollToTop from './components/ScrollToTop'
 
 class App extends Component {
-  constructor(props) {
-    super(props)
+  constructor() {
+    super()
 
     this.state = {
       redirect: {
@@ -27,11 +28,13 @@ class App extends Component {
     }
 
     this.handlePin = newCourse => {
-      let coursePinned = this.state.user.pinnedCourses.find(course => {
+      // Check if course is already pinned
+      let isCoursePinned = this.state.user.pinnedCourses.find(course => {
         return course._id === newCourse._id
       })
-      if (coursePinned) {
-        fetch(`/api/users/${user._id}/pinned/${newCourse._id}`, {
+      if (isCoursePinned) {
+        // Unpin course
+        fetch(`/api/users/${this.state.user._id}/pinned/${newCourse._id}`, {
           method: 'DELETE'
         }).then(
           this.setState(prevState => {
@@ -43,7 +46,8 @@ class App extends Component {
           })
         )
       } else {
-        fetch(`/api/users/${user._id}/pinned/${newCourse._id}`, {
+        // Pin course
+        fetch(`/api/users/${this.state.user._id}/pinned/${newCourse._id}`, {
           method: 'POST'
         }).then(
           this.setState(prevState => {
@@ -59,19 +63,76 @@ class App extends Component {
           })
         )
       }
-      // handlePin() {
-      //   if (!this.state.active) {
-      //     fetch('/api/users/5b00769b734d1d0aaaaca1cc/pinned', {
-      //       method: 'POST',
-      //       body: JSON.stringify({ courseId: this.props.course._id }),
-      //       headers: {
-      //         'Content-Type': 'application/json'
-      //       }
-      //     }).then(res => {
-      //       console.log(res)
-      //     })
-      //   }
-      // }
+    }
+
+    this.handleBookmark = newBook => {
+      // Check if book is already bookmarked
+      let isBookMarked = this.state.user.bookmarks.find(book => {
+        return book._id === newBook._id
+      })
+      if (isBookMarked) {
+        // Unbookmark book
+        fetch(`/api/users/${this.state.user._id}/bookmarks/${newBook._id}`, {
+          method: 'DELETE'
+        }).then(
+          this.setState(prevState => {
+            let user = prevState.user
+            user.bookmarks = user.bookmarks.filter(
+              book => book._id !== newBook._id
+            )
+            return { user }
+          })
+        )
+      } else {
+        // Bookmark book
+        fetch(`/api/users/${this.state.user._id}/bookmarks/${newBook._id}`, {
+          method: 'POST'
+        }).then(
+          this.setState(prevState => {
+            let user = prevState.user
+            user.bookmarks = user.bookmarks.concat(newBook)
+            return { user }
+          })
+        )
+      }
+    }
+
+    this.handleLogin = userData => {
+      console.log({ userData })
+
+      return fetch('/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      })
+        .then(res => {
+          if (!res.ok) {
+            throw res.status
+          }
+          return res
+        })
+        .then(res => res.json())
+        .then(user => {
+          this.setState({
+            user
+          })
+        })
+        .catch(err => {
+          return err
+        })
+    }
+
+    this.handleLogout = () => {
+      this.setState({
+        user: {
+          _id: '',
+          name: '',
+          pinnedCourses: [],
+          bookmarks: []
+        }
+      })
     }
   }
 
@@ -82,52 +143,60 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetch('/api/users/5b00769b734d1d0aaaaca1cc')
-      .then(res => res.json())
-      .then(user => this.setState({ user }))
+    // fetch('/api/users/5b00769b734d1d0aaaaca1cc')
+    //   .then(res => res.json())
+    //   .then(user => this.setState({ user }))
   }
 
   render() {
     return (
       <UserContext.Provider
-        value={{ user: this.state.user, handlePin: this.handlePin }}
+        value={{
+          user: this.state.user,
+          handlePin: this.handlePin,
+          handleBookmark: this.handleBookmark,
+          handleLogin: this.handleLogin,
+          handleLogout: this.handleLogout
+        }}
       >
         <BrowserRouter>
-          <div>
-            <header id="mainHeader" className="mb-md-4">
+          <ScrollToTop>
+            <div>
+              <header id="mainHeader" className="mb-md-4">
+                <div className="container">
+                  <div className="row">
+                    <div className="col-md-3">
+                      <h1 className="pl-xso-3">
+                        <Link to="/">Textbooks</Link>
+                      </h1>
+                    </div>
+                    <div className="col-md-9">
+                      <nav className="navbar justify-content-end pr-0">
+                        <CourseSelector
+                          action="Find"
+                          submitFunc={this.goToCourse}
+                        />
+                      </nav>
+                    </div>
+                  </div>
+                </div>
+              </header>
               <div className="container">
                 <div className="row">
-                  <div className="col-md-3">
-                    <h1 className="pl-xso-3">
-                      <Link to="/">Textbooks</Link>
-                    </h1>
+                  <div id="mainContent" className="col-lg-9 mb-4">
+                    <Route exact path="/" component={Home} />
+                    <Route path="/course/:courseCode" component={Course} />
+                    <Route path="/book/:bookId" component={Book} />
+                    <Route path="/post" component={Post} />
                   </div>
-                  <div className="col-md-9">
-                    <nav className="navbar justify-content-end pr-0">
-                      <CourseSelector
-                        action="Find"
-                        submitFunc={this.goToCourse}
-                      />
-                    </nav>
-                  </div>
-                </div>
-              </div>
-            </header>
-            <div className="container">
-              <div className="row">
-                <div id="mainContent" className="col-lg-9 mb-4">
-                  <Route exact path="/" component={Home} />
-                  <Route path="/course/:courseCode" component={Course} />
-                  <Route path="/book/:bookId" component={Book} />
-                  <Route path="/post" component={Post} />
-                </div>
 
-                {/* MOVE THIS TO A COMPONENT */}
+                  {/* MOVE THIS TO A COMPONENT */}
 
-                <Sidebar />
+                  <Sidebar />
+                </div>
               </div>
             </div>
-          </div>
+          </ScrollToTop>
         </BrowserRouter>
       </UserContext.Provider>
     )

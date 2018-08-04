@@ -6,7 +6,7 @@ import TimeAgo from 'timeago-react'
 import Loading from '../components/Loading'
 import ProfileIcon from '../components/ProfileIcon'
 import PageTitle from '../components/PageTitle'
-import BookMark from '../components/BookMark'
+import BookMark from '../components/Bookmark'
 
 class Book extends Component {
   constructor(props) {
@@ -48,6 +48,13 @@ class Book extends Component {
     this.fetchBook()
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.match.params.bookId !== this.props.match.params.bookId) {
+      this.setState({ loading: true, books: {} })
+      this.fetchBook()
+    }
+  }
+
   render() {
     let book = this.state.book
 
@@ -60,15 +67,21 @@ class Book extends Component {
       return (
         <section className="container">
           <PageTitle title={book.title}>
-            <BookMark />
+            <BookMark book={this.state.book} />
           </PageTitle>
           <div className="row">
             <div className="col-md-4">
-              <img
-                className="bookPostingImg"
-                src="/images/book6.jpg"
-                alt="Textbook"
-              />
+              <a href={`/bookImages/uncompressed/${book.imageID}`}>
+                <img
+                  className="bookPostingImg"
+                  src={
+                    book.imageID !== undefined
+                      ? `/bookImages/compressed/${book.imageID}`
+                      : '/images/no_picture.png'
+                  }
+                  alt="Textbook"
+                />
+              </a>
             </div>
             <div className="col-md-8 pl-4">
               <p className="mb-4">

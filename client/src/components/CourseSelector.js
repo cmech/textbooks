@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import withRouter from 'react-router-dom/withRouter'
 import './CourseSelector.css'
+import { Truncate } from '../functions'
+import Select, { createFilter } from 'react-select'
 
 class CourseSelector extends Component {
   constructor(props) {
@@ -24,37 +26,53 @@ class CourseSelector extends Component {
   fetchDepartments() {
     fetch('/api/departments')
       .then(res => res.json())
-      .then(departments => this.setState({ departments }))
+      .then(departments => {
+        departments = departments.map(department => {
+          return {
+            _id: department._id,
+            name: department.name,
+            label: department.name,
+            value: department._id
+          }
+        })
+        this.setState({ departments })
+      })
       .catch(err => console.error(err))
   }
   fetchCourses() {
     this.setState({ loadingCourses: true, courses: [] })
     fetch('/api/departments/' + this.state.department)
       .then(res => res.json())
-      .then(courses =>
+      .then(courses => {
+        courses = courses.map(course => {
+          return {
+            _id: course._id,
+            title: course.title,
+            label: course.code,
+            value: course._id,
+            code: course.code
+          }
+        })
         this.setState({
           courses,
           loadingCourses: false
         })
-      )
+      })
       .catch(err => console.error(err))
   }
 
   handleDepartmentChange(e) {
     this.setState(
       {
-        department: e.target.value
+        department: e.value,
+        course: {}
       },
       () => this.fetchCourses()
     )
   }
-  handleCourseChange(e) {
+  handleCourseChange(course) {
     this.setState({
-      course: {
-        id: e.target.value,
-        code: e.target.children.namedItem('courseOption' + e.target.value)
-          .innerText
-      }
+      course
     })
   }
 
@@ -63,9 +81,12 @@ class CourseSelector extends Component {
   }
 
   render() {
+    const filterConfig = {
+      matchProp: 'label'
+    }
     return (
       <section className="form-inline CourseSelector">
-        <select
+        {/* <select
           name="department"
           id="departmentSelect"
           value={this.state.department}
@@ -76,21 +97,37 @@ class CourseSelector extends Component {
             Select Department...
           </option>
           {this.state.departments.map(department => {
-            let name = department.name
-
-            if (name.length > 30) {
-              name = name.substring(0, 30 - 3) + '...'
-            }
-
             return (
               <option value={department._id} key={department._id}>
-                {name}
+                <Truncate length="30">{department.name}</Truncate>
               </option>
             )
           })}
-        </select>
+        </select> */}
 
-        <select
+        <Select
+          id="departmentSelect"
+          options={this.state.departments}
+          onChange={this.handleDepartmentChange}
+          className="mb-mdd-2"
+          placeholder="Select Department..."
+          filterOption={createFilter(filterConfig)}
+          // matchProp="label"
+        />
+        <Select
+          id="courseSelect"
+          options={this.state.courses}
+          onChange={this.handleCourseChange}
+          value={this.state.course}
+          isLoading={this.state.loadingCourses}
+          isDisabled={this.state.department === ''}
+          closeMenuOnScroll={true}
+          className="mr-3 ml-lg-3"
+          placeholder="Select Course..."
+          filterOption={createFilter(filterConfig)}
+          // matchProp="label"
+        />
+        {/* <select
           name="course"
           id="courseSelect"
           value={this.state.course.id}
@@ -112,7 +149,7 @@ class CourseSelector extends Component {
               </option>
             )
           })}
-        </select>
+        </select> */}
 
         <button
           type="submit"

@@ -1,10 +1,41 @@
 const express = require('express')
 const db = require('../database')
 const router = express.Router()
+const multer = require('multer')
+const sharp = require('sharp')
 
 const Book = require('../models/book')
 const Course = require('../models/course')
 const User = require('../models/user')
+const countBooks = require('../func/countBooks')
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './uploads/uncompressed')
+  },
+  filename: (req, file, cb) => {
+    let extensionIndex = file.originalname.lastIndexOf('.')
+    cb(null, Date.now() + file.originalname.substr(extensionIndex))
+  }
+})
+
+const upload = multer({
+  limits: {
+    files: 1,
+    fileSize: 5 * 1024 * 1024 // 5MB
+  },
+  fileFilter,
+  storage
+})
+
+function fileFilter(req, file, cb) {
+  // console.log(file)
+  if (/(image)\//.test(file.mimetype)) {
+    cb(null, true)
+  } else {
+    cb(null, false)
+  }
+}
 
 router.get('/', (req, res) => {
   Book.find()
@@ -20,15 +51,23 @@ router.get('/', (req, res) => {
     })
 })
 
-router.post('/', (req, res) => {
+router.post('/', upload.single('bookImage'), (req, res) => {
   const book = new Book({
     title: req.body.title,
     price: parseInt(req.body.price),
-    courses: req.body.courses,
+    imageID: req.file.filename,
+    courses: JSON.parse(req.body.courses),
     seller: '5b00769b734d1d0aaaaca1cc'
   })
   book
     .save()
+    .then(() => {
+      let input = `./uploads/uncompressed/${book.imageID}`
+      let output = `./uploads/compressed/${book.imageID}`
+      sharp(input)
+        .resize(300, 400)
+        .toFile(output)
+    })
     .then(result => {
       res.status(201).json({
         message: 'Book created',
@@ -37,6 +76,8 @@ router.post('/', (req, res) => {
     })
     .catch(err => console.error(err))
 })
+
+router.post('/image', upload.single('bookImage'), (req, res) => {})
 
 router.get('/:id', (req, res) => {
   const id = req.params.id
@@ -91,9 +132,11 @@ router.get('/course/:code', (req, res) => {
   const code = req.params.code.replace('_', ' ').toUpperCase()
   Course.findOne({ code })
     .exec()
+    .then(course => countBooks(course))
     .then(course => {
       if (course) {
         Book.find({ courses: course._id })
+          .sort({ datePosted: -1 })
           .exec()
           .then(books => {
             let result = {
