@@ -37,7 +37,7 @@ class LoginForm extends Component {
         this.setState({
           error: {
             display: true,
-            message: 'Incorrent password',
+            message: 'Incorrect password',
             color: 'danger'
           }
         })
