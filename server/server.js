@@ -8,6 +8,8 @@ const https = require('https')
 const fs = require('fs')
 const passport = require('passport')
 
+require('dotenv').config()
+
 passport.serializeUser(function(user, cb) {
   cb(null, user)
 })

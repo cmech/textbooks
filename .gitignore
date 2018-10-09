@@ -14,5 +14,6 @@ ideas.md
 
 *.key
 *.cert
+*.env
 
 nodemon.json
