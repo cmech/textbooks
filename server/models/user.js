@@ -4,7 +4,7 @@ const userSchema = mongoose.Schema({
   name: String,
   email: String,
   password: String,
-  fb: Number,
+  fbID: Number,
   pinnedCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
   bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }]
 })

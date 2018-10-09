@@ -37,8 +37,27 @@ function fileFilter(req, file, cb) {
   }
 }
 
-router.get('/', (req, res) => {
+router.get('/all', (req, res) => {
   Book.find()
+    .populate('seller')
+    .exec()
+    .then(books => {
+      res.status(200).json(books)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json({
+        error: err
+      })
+    })
+})
+
+router.get('/recent/:limit', (req, res) => {
+  const limit = parseInt(req.params.limit) || 4
+  Book.find()
+    .limit(limit)
+    .sort({ datePosted: -1 })
+    .populate('courses')
     .exec()
     .then(books => {
       res.status(200).json(books)
@@ -57,7 +76,7 @@ router.post('/', upload.single('bookImage'), (req, res) => {
     price: parseInt(req.body.price),
     imageID: req.file.filename,
     courses: JSON.parse(req.body.courses),
-    seller: '5b00769b734d1d0aaaaca1cc'
+    seller: req.body.seller
   })
   book
     .save()
@@ -137,6 +156,7 @@ router.get('/course/:code', (req, res) => {
       if (course) {
         Book.find({ courses: course._id })
           .sort({ datePosted: -1 })
+          .populate('seller')
           .exec()
           .then(books => {
             let result = {

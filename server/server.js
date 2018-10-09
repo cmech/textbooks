@@ -4,6 +4,17 @@ const bodyParser = require('body-parser')
 const path = require('path')
 const compression = require('compression')
 const expressStaticGzip = require('express-static-gzip')
+const https = require('https')
+const fs = require('fs')
+const passport = require('passport')
+
+passport.serializeUser(function(user, cb) {
+  cb(null, user)
+})
+
+passport.deserializeUser(function(obj, cb) {
+  cb(null, obj)
+})
 
 // *** Server Setup *** //
 
@@ -15,6 +26,17 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/', expressStaticGzip('../client/build'))
 app.use(morgan('dev'))
 app.use(compression())
+app.use(require('cookie-parser')())
+app.use(
+  require('express-session')({
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true
+  })
+)
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 // *** ROUTES *** //
 app.use('/api/departments', require('./api/departments'))
@@ -30,6 +52,10 @@ app.get('/*', (req, res) => {
   })
 })
 
-app.listen(port, () => {
+const httpsOptions = {
+  key: fs.readFileSync('./localhost.key'),
+  cert: fs.readFileSync('./localhost.cert')
+}
+const server = https.createServer(httpsOptions, app).listen(port, () => {
   console.log('Listening on port ' + port)
 })

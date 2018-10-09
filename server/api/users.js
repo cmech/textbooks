@@ -1,11 +1,58 @@
 const express = require('express')
-const bcrypt = require('bcrypt')
 const router = express.Router()
-
-const saltRounds = 10
+const passport = require('passport')
+const FacebookStrategy = require('passport-facebook')
 
 const User = require('../models/user')
 const countBooks = require('../func/countBooks')
+
+passport.use(
+  new FacebookStrategy(
+    {
+      clientID: '1207080746061126',
+      clientSecret: '8a2a1e7006f4c1c2f5f5f4a449357c5d',
+      callbackURL: 'https://192.168.1.8:5000/api/users/auth/facebook/callback',
+      profileFields: ['id', 'displayName']
+    },
+    (accessToken, refreshToken, profile, cb) => {
+      console.log(profile)
+      User.findOne({ fbID: profile.id })
+        .exec()
+        .then(user => {
+          if (user === null) {
+            console.log(profile)
+            User.create(
+              {
+                name: profile.displayName,
+                fbID: profile.id
+              },
+              (err, result) => {
+                console.log({ result })
+                return cb(err, result)
+              }
+            )
+          } else {
+            User.findById(user._id)
+              .populate('pinnedCourses')
+              .populate('bookmarks')
+              .exec()
+              .then(user => {
+                let pinnedCourses = processCourses(user.pinnedCourses)
+                let results = Promise.all(pinnedCourses)
+                  .then(results => {
+                    user.pinnedCourses = results
+                    return user
+                  })
+                  .then(user => {
+                    return cb('', user)
+                  })
+              })
+              .catch(err => console.log(err))
+          }
+        })
+    }
+  )
+)
 
 function processCourses(courses) {
   return courses
@@ -17,7 +64,7 @@ function processCourses(courses) {
     .map(course => countBooks(course))
 }
 
-function getUserData(id, res) {
+function getUserData(id) {
   User.findById(id)
     .populate('pinnedCourses')
     .populate('bookmarks')
@@ -29,48 +76,85 @@ function getUserData(id, res) {
         return user
       })
     })
-    .then(user => {
-      res.json(user)
-    })
-    .catch()
 }
+
+router.get('/loggedin', (req, res) => {
+  // console.log(req.user)
+  let profile = req.user
+  if (profile) {
+    User.findOne({ fbID: profile.fbID })
+      .exec()
+      .then(user => {
+        User.findById(user._id)
+          .populate('pinnedCourses')
+          .populate('bookmarks')
+          .exec()
+          .then(user => {
+            let pinnedCourses = processCourses(user.pinnedCourses)
+            let results = Promise.all(pinnedCourses)
+              .then(results => {
+                user.pinnedCourses = results
+                return user
+              })
+              .then(user => {
+                res.json(user)
+              })
+          })
+          .catch(err => console.log(err))
+      })
+  } else {
+    req.json({})
+  }
+})
+
+router.get('/logout', (req, res) => {
+  req.logout()
+  res.redirect('/')
+})
+
+router.get(
+  '/auth/facebook',
+  passport.authenticate('facebook', {
+    authType: 'rerequest',
+    scope: ['user_link']
+  })
+)
+
+router.get(
+  '/auth/facebook/callback',
+  passport.authenticate('facebook', {
+    successRedirect: '/',
+    failureRedirect: '/'
+  })
+)
 
 router.get('/:id', (req, res) => {
   const id = req.params.id
   getUserData(id, res)
 })
 
-router.post('/', (req, res) => {
-  let userData = req.body
-  User.findOne({ email: userData.email })
-    .exec()
-    .then(user => {
-      if (user === null) {
-        if (userData.name !== undefined && userData.signup === true) {
-          bcrypt.hash(userData.password, saltRounds, (err, hash) => {
-            User.create(
-              { email: userData.email, password: hash, name: userData.name },
-              (err, result) => {
-                if (err) throw err
-                res.json(result)
-              }
-            )
-          })
-        } else {
-          res.sendStatus(404)
-        }
-      } else {
-        bcrypt.compare(userData.password, user.password, (err, isValid) => {
-          if (isValid) {
-            getUserData(user._id, res)
-          } else {
-            res.sendStatus(403)
-          }
-        })
-      }
-    })
-    .catch(err => console.log(err))
-})
+// router.post('/', (req, res) => {
+//   let userData = req.body
+//   User.findOne({ fbID: userData.userID })
+//     .exec()
+//     .then(user => {
+//       if (user === null) {
+//         User.create(
+//           {
+//             name: userData.name,
+//             fbID: userData.userID
+//           },
+//           (err, result) => {
+//             if (err) throw err
+//             res.json(result)
+//           }
+//         )
+//       } else {
+//         getUserData(user._id, res)
+//       }
+//     })
+//     .catch(err => console.log(err))
+// })
 
 router.post('/:userID/pinned/:courseID', (req, res) => {
   const userID = req.params.userID
