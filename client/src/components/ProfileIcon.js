@@ -6,7 +6,7 @@ class ProfileIcon extends Component {
   render() {
     return (
       <div className="profileIcon">
-        <Link to="/user/7">
+        <Link to={`/user/${this.props.id}`}>
           <img
             className="profilePicture"
             src={
@@ -19,7 +19,7 @@ class ProfileIcon extends Component {
         </Link>
         {this.props.label !== false && (
           <div className="profileLabel">
-            <Link to="/user/7">Caleb</Link>
+            <Link to={`/user/${this.props.id}`}>{this.props.name}</Link>
           </div>
         )}
       </div>

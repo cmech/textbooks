@@ -7,6 +7,7 @@ import Loading from '../components/Loading'
 import ProfileIcon from '../components/ProfileIcon'
 import PageTitle from '../components/PageTitle'
 import BookMark from '../components/Bookmark'
+import { UserContext } from '../UserContext'
 
 class Book extends Component {
   constructor(props) {
@@ -70,32 +71,29 @@ class Book extends Component {
             <BookMark book={this.state.book} />
           </PageTitle>
           <div className="row">
-            <div className="col-md-4">
-              <a href={`/bookImages/uncompressed/${book.imageID}`}>
-                <img
-                  className="bookPostingImg"
-                  src={
-                    book.imageID !== undefined
-                      ? `/bookImages/compressed/${book.imageID}`
-                      : '/images/no_picture.png'
-                  }
-                  alt="Textbook"
-                />
-              </a>
-            </div>
             <div className="col-md-8 pl-4">
-              <p className="mb-4">
-                <span className="display-4 ">${book.price}</span>
-              </p>
+              <div className="mb-4 d-flex justify-content-between align-content-center flex-md-row">
+                <span className="display-4">${book.price}</span>
+                {book.seller._id === this.props.user._id && (
+                  <div className="align-self-center">
+                    <Link to={`/post/${book._id}`}>
+                      <i className="fas fa-pencil-alt h4 text-secondary" />
+                    </Link>
+                    <a href="#">
+                      <i class="fas fa-trash h4 ml-3 text-secondary" />
+                    </a>
+                  </div>
+                )}
+              </div>
 
-              <div className="card flex-md-row my-4">
-                <div className="card-img-left flex-auto d-none d-lg-block align-self-center">
-                  <ProfileIcon id={book.seller.fb} label={false} />
+              <div className="card flex-md-row mt-4 bg-light">
+                <div className="flex-auto d-none d-lg-block align-self-center ml-4 mr-2">
+                  <ProfileIcon id={book.seller.fbID} label={false} />
                 </div>
                 <div className="card-body d-flex flex-column align-items-start">
                   <p>
                     Posted by{' '}
-                    <Link to={'/user/' + book.seller.id}>
+                    <Link to={'/user/' + book.seller._id}>
                       {book.seller.name}
                     </Link>{' '}
                     <TimeAgo
@@ -104,10 +102,21 @@ class Book extends Component {
                       live={false}
                     />
                   </p>
-                  <MessengerButton id="calebmech" />
+                  <div className="d-flex">
+                    <MessengerButton id="calebmech" />
+                    {book.seller.email && (
+                      <a
+                        href={`mailto:${book.seller.email}`}
+                        className="btn btn-secondary ml-3"
+                      >
+                        <i className="fas fa-envelope mr-2" />
+                        Email
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
-              <div className="mt-1">
+              <div className="mt-3 mb-4">
                 {book.courses.map(course => (
                   <Link
                     to={'/course/' + course.code.replace(' ', '_')}
@@ -132,6 +141,20 @@ class Book extends Component {
                                 </div>
                                 </div> */}
             </div>
+
+            <div className="col-md-4">
+              <a href={`/bookImages/uncompressed/${book.imageID}`}>
+                <img
+                  className="bookPostingImg"
+                  src={
+                    book.imageID !== undefined
+                      ? `/bookImages/compressed/${book.imageID}`
+                      : '/images/no_picture.png'
+                  }
+                  alt="Textbook"
+                />
+              </a>
+            </div>
           </div>
         </section>
       )
@@ -139,4 +162,8 @@ class Book extends Component {
   }
 }
 
-export default Book
+export default props => (
+  <UserContext.Consumer>
+    {({ user }) => <Book {...props} user={user} />}
+  </UserContext.Consumer>
+)

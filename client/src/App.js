@@ -125,6 +125,7 @@ class App extends Component {
     }
 
     this.handleLogout = () => {
+      fetch('/api/users/logout')
       this.setState({
         user: {
           _id: '',
@@ -143,9 +144,10 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // fetch('/api/users/5b00769b734d1d0aaaaca1cc')
-    //   .then(res => res.json())
-    //   .then(user => this.setState({ user }))
+    fetch('/api/users/loggedin')
+      .then(res => res.json())
+      .then(user => this.setState({ user }))
+      .catch(err => console.log('Not logged in'))
   }
 
   render() {

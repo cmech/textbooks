@@ -136,12 +136,17 @@ function BookList(props) {
               {/* <div className="card-footer">
                 </div> */}
             </div>
-            <div
-              className="profileIcon mr-4 d-none d-md-block"
-              style={{ alignSelf: 'center' }}
-            >
-              <ProfileIcon id="1293560184108742" />
-            </div>
+            {book.seller != null && (
+              <div
+                className="profileIcon mr-4 d-none d-md-block"
+                style={{ alignSelf: 'center' }}
+              >
+                <ProfileIcon
+                  id={book.seller.fbID}
+                  name={book.seller.name.split(' ')[0]}
+                />
+              </div>
+            )}
           </div>
         )
       })}

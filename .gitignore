@@ -8,3 +8,11 @@ zondicons
 bootstrap
 
 server/uploads/
+public/images
+
+ideas.md
+
+*.key
+*.cert
+
+nodemon.json

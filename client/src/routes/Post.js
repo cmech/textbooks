@@ -6,6 +6,7 @@ import GetFacebookUsername from '../components/GetFacebookUsername'
 import ImageUpload from '../components/ImageUpload'
 import Loading from '../components/Loading'
 import { handleGenericInputChange } from '../functions'
+import { UserContext } from '../UserContext'
 
 class Post extends Component {
   constructor(props) {
@@ -73,9 +74,10 @@ class Post extends Component {
     formData.append('title', this.state.title)
     formData.append('price', this.state.price)
     formData.append('bookImage', this.state.bookImage)
+    formData.append('seller', this.props.user._id)
     formData.append(
       'courses',
-      JSON.stringify(this.state.courses.map(course => course.id))
+      JSON.stringify(this.state.courses.map(course => course._id))
     )
     fetch('/api/books', {
       method: 'POST',
@@ -106,13 +108,18 @@ class Post extends Component {
                     value={this.state.title}
                     onChange={this.handleGenericInputChange}
                     className="form-control"
+                    placeholder="e.g.&nbsp;&nbsp;&ldquo;Advanced Engineering Mathematics (6th Edition)&rdquo;"
                     required
                   />
                 </div>
               </div>
               <div className="col-md-3">
                 <div className="form-group">
-                  <label htmlFor="price">Price</label>
+                  <label htmlFor="price">
+                    Price
+                    {'\u00A0'}
+                    <span className="text-caption text-muted"> (Optional)</span>
+                  </label>
                   <div className="input-group">
                     <div className="input-group-prepend">
                       <span className="input-group-text">$</span>
@@ -130,11 +137,25 @@ class Post extends Component {
               </div>
             </div>
             <ImageUpload handleFileChange={this.handleFileChange} />
+            <div className="form-group mt-3">
+              <label htmlFor="title">
+                Description
+                {'\u00A0'}
+                <span className="text-caption text-muted"> (Optional)</span>
+              </label>
+              <textarea
+                name="description"
+                id="descriptionInput"
+                value={this.state.description}
+                onChange={this.handleGenericInputChange}
+                className="form-control"
+              />
+            </div>
           </div>
-          <div className="card form-group">
+          <div className="card form-group mb-4">
             <div className="card-header">Relevant courses</div>
             <div className="card-body">
-              <CourseSelector action="Select" submitFunc={this.selectCourse} />
+              <CourseSelector action="Add" submitFunc={this.selectCourse} />
             </div>
             <ul className="list-group list-group-flush">
               {this.state.courses.map(course => {
@@ -152,7 +173,7 @@ class Post extends Component {
               })}
             </ul>
           </div>
-          <div className="card form-group">
+          {/* <div className="card form-group">
             <div className="card-header">Contact options</div>
             <div className="card-body">
               <div className="container">
@@ -175,14 +196,16 @@ class Post extends Component {
                 </div>
               </div>
               {/* <GetFacebookUsername /> */}
-            </div>
-          </div>
+          {/* </div>
+          </div> */}
           {this.state.submitting ? (
             <Loading />
           ) : (
-            <button type="submit" className="btn">
-              Post
-            </button>
+            <div>
+              <button type="submit" className="btn btn-secondary px-5">
+                Post
+              </button>
+            </div>
           )}
         </form>
       </section>
@@ -190,4 +213,8 @@ class Post extends Component {
   }
 }
 
-export default Post
+export default props => (
+  <UserContext.Consumer>
+    {({ user }) => <Post {...props} user={user} />}
+  </UserContext.Consumer>
+)

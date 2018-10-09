@@ -6,6 +6,8 @@ import './Sidebar.css'
 import PinnedCourses from './PinnedCourses'
 import Bookmarks from './Bookmarks'
 import { UserContext } from '../UserContext'
+import Loading from './Loading'
+import Login from './Login'
 
 class Sidebar extends Component {
   constructor(props) {
@@ -50,16 +52,25 @@ class Sidebar extends Component {
           <PinnedCourses />
           <Bookmarks />
           <hr className="mb-4" />
-          <button className="btn w-100 mb-4" onClick={this.props.handleLogout}>
+          <button className="btn w-100 mb-3" onClick={this.props.handleLogout}>
             Logout
           </button>
+          <p className="text-muted text-center text-caption">
+            Signed in as {this.props.user.name}
+          </p>
         </div>
       )
     } else {
       return (
         <div className="col-md-3">
-          <LoginForm />
+          {/* <LoginForm /> */}
+          {/* <div className="card">
+            <div className="card-header">Login / Signup</div>
+            <div className="card-body text-center"> */}
+          {/* <Loading /> */}
+          <Login />
         </div>
+        // </div>
       )
     }
   }

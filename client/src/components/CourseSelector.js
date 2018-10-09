@@ -122,7 +122,7 @@ class CourseSelector extends Component {
           isLoading={this.state.loadingCourses}
           isDisabled={this.state.department === ''}
           closeMenuOnScroll={true}
-          className="mr-3 ml-lg-3"
+          className="mr-3 ml-lg-3 mb-mdd-2"
           placeholder="Select Course..."
           filterOption={createFilter(filterConfig)}
           // matchProp="label"
@@ -155,7 +155,7 @@ class CourseSelector extends Component {
           type="submit"
           disabled={this.state.course.id === '' || this.state.course.id === '0'}
           onClick={e => this.props.submitFunc(e, this.state.course)}
-          className="btn btn-secondary px-4"
+          className="btn btn-secondary px-4 mb-mdd-2"
         >
           {this.props.action}
         </button>
